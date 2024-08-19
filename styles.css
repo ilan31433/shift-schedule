@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    direction: rtl; /* Support for right-to-left text */
+}
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for 7 days */
+    gap: 10px;
+    padding: 20px;
+}
+
+.day {
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: relative;
+}
+
+.date {
+    font-weight: bold;
+    color: black; /* Black color for the date */
+    margin-bottom: 10px;
+}
+
+.add-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.requests {
+    margin-top: 30px;
+}
+
+.request {
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.request.low {
+    color: grey; /* Grey color for low priority */
+    background-color: #f0f0f0; /* Light background for contrast */
+}
+
+.request.medium {
+    color: orange; /* Orange color for medium priority */
+    background-color: #fff5e6; /* Light orange background */
+}
+
+.request.high {
+    color: red; /* Red color for high priority */
+    background-color: #ffe6e6; /* Light red background */
+}
+
+.hidden {
+    display: none;
+}
+
+#dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 1000;
+}
+
+#admin-button {
+    margin-top: 20px;
+}

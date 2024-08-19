@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Schedule Calendar</title>
+    <link rel="stylesheet" href="styles.css"> <!-- External CSS file -->
+</head>
+<body>
+    <!-- Page content goes here -->
+    <div id="calendar">
+        <!-- Week 1 -->
+        <div class="day" data-day="1">
+            <div class="date">01/08 - Sunday</div>
+            <button class="add-button">+</button>
+            <div class="requests"></div>
+        </div>
+        <div class="day" data-day="2">
+            <div class="date">02/08 - Monday</div>
+            <button class="add-button">+</button>
+            <div class="requests"></div>
+        </div>
+        <div class="day" data-day="3">
+            <div class="date">03/08 - Tuesday</div>
+            <button class="add-button">+</button>
+            <div class="requests"></div>
+        </div>
+        <div class="day" data-day="4">
+            <div class="date">04/08 - Wednesday</div>
+            <button class="add-button">+</button>
+            <div class="requests"></div>
+        </div>
+        <div class="day" data-day="5">
+            <div class="date">05/08 - Thursday</div>
+            <button class="add-button">+</button>
+            <div class="requests"></div>
+        </div>
+        <div class="day" data-day="6">
+            <div class="date">06/08 - Friday</div>
+            <button class="add-button">+</button>
+            <div class="requests"></div>
+        </div>
+        <div class="day" data-day="7">
+            <div class="date">07/08 - Saturday</div>
+            <button class="add-button">+</button>
+            <div class="requests"></div>
+        </div>
+        <!-- Repeat these divs for each week of the month -->
+    </div>
+
+    <!-- Dialog to add a request -->
+    <div id="dialog" class="hidden">
+        <h3>Add a Request</h3>
+        <form id="request-form">
+            <label for="name">Name:</label>
+            <select id="name" name="name">
+                <option value="Employee 1">Employee 1</option>
+                <option value="Employee 2">Employee 2</option>
+                <option value="Employee 3">Employee 3</option>
+                <option value="Employee 4">Employee 4</option>
+                <option value="Employee 5">Employee 5</option>
+                <option value="Employee 6">Employee 6</option>
+                <option value="Employee 7">Employee 7</option>
+                <option value="Employee 8">Employee 8</option>
+                <option value="Employee 9">Employee 9</option>
+                <option value="Employee 10">Employee 10</option>
+            </select>
+
+            <label for="shift">Shift:</label>
+            <select id="shift" name="shift">
+                <option value="Morning">Morning</option>
+                <option value="Evening">Evening</option>
+                <option value="Night">Night</option>
+            </select>
+
+            <label for="priority">Priority:</label>
+            <select id="priority" name="priority">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+
+            <button type="button" id="submit-request">Submit</button>
+        </form>
+    </div>
+
+    <!-- Admin Button -->
+    <button id="admin-button">Admin</button>
+
+    <!-- JavaScript file -->
+    <script src="script.js"></script> <!-- External JS file -->
+</body>
+</html>
