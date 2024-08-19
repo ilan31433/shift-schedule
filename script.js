@@ -6,16 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load saved requests from Firebase
     loadRequests();
 
-    // Open the dialog
+    // Open the dialog when the "+" button is clicked
     document.querySelectorAll('.add-button').forEach(button => {
         button.addEventListener('click', (e) => {
             dialog.classList.remove('hidden');
-            // Store the current day
+            // Store the current day in the dialog's data attribute
             dialog.setAttribute('data-day', e.target.closest('.day').dataset.day);
         });
     });
 
-    // Submit the request
+    // Handle the submission of a new request
     submitRequestButton.addEventListener('click', () => {
         const name = document.getElementById('name').value;
         const shift = document.getElementById('shift').value;
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const requestDiv = document.createElement('div');
 
         requestDiv.classList.add('request');
-        requestDiv.classList.add(priority.toLowerCase()); // Add the class based on priority
+        requestDiv.classList.add(priority.toLowerCase()); // Apply the priority class
         requestDiv.textContent = `${name} - ${shift}`;
 
         document.querySelector(`.day[data-day="${day}"] .requests`).appendChild(requestDiv);
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveRequest(day, name, shift, priority);
     });
 
-    // Admin Mode
+    // Admin mode for approving requests
     adminButton.addEventListener('click', () => {
         const password = prompt('Enter the admin password:');
         if (password === '3615') {
@@ -66,7 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
         requestsRef.on('value', (snapshot) => {
             const requests = snapshot.val();
             for (const day in requests) {
-                requests[day].forEach(request => {
+                for (const key in requests[day]) {
+                    const request = requests[day][key];
                     const requestDiv = document.createElement('div');
                     requestDiv.classList.add('request');
                     requestDiv.classList.add(request.priority.toLowerCase());
@@ -75,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         requestDiv.style.backgroundColor = 'green';
                     }
                     document.querySelector(`.day[data-day="${day}"] .requests`).appendChild(requestDiv);
-                });
+                }
             }
         });
     }
@@ -86,12 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
         requestsRef.once('value', (snapshot) => {
             const requests = snapshot.val();
             for (const day in requests) {
-                requests[day].forEach(request => {
+                for (const key in requests[day]) {
+                    const request = requests[day][key];
                     if (`${request.name} - ${request.shift}` === textContent) {
-                        request.approved = true;
-                        firebase.database().ref(`requests/${day}`).set(requests[day]);
+                        requestsRef.child(`${day}/${key}`).update({ approved: true });
                     }
-                });
+                }
             }
         });
     }
