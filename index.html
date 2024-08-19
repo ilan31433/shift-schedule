@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="styles.css"> <!-- External CSS file -->
 </head>
 <body>
-    <!-- Page content goes here -->
     <div id="calendar">
         <!-- Week 1 -->
         <div class="day" data-day="1">
@@ -87,7 +86,27 @@
     <!-- Admin Button -->
     <button id="admin-button">Admin</button>
 
-    <!-- JavaScript file -->
-    <script src="script.js"></script> <!-- External JS file -->
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+
+    <!-- Initialize Firebase -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTZP38rfcdYekTOwfy4tJu93hL8tiBJn0",
+            authDomain: "shift-shedule-c6b49.firebaseapp.com",
+            projectId: "shift-shedule-c6b49",
+            storageBucket: "shift-shedule-c6b49.appspot.com",
+            messagingSenderId: "746061702915",
+            appId: "1:746061702915:web:0babcb54a12d3f9fb86b36",
+            measurementId: "G-XFH0QXN70W"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+    </script>
+
+    <!-- External JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>

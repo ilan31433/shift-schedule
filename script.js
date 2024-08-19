@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitRequestButton = document.getElementById('submit-request');
     const adminButton = document.getElementById('admin-button');
 
-    // Load saved requests from localStorage
+    // Load saved requests from Firebase
     loadRequests();
 
     // Open the dialog
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector(`.day[data-day="${day}"] .requests`).appendChild(requestDiv);
         dialog.classList.add('hidden');
 
-        // Save the request to localStorage
+        // Save the request to Firebase
         saveRequest(day, name, shift, priority);
     });
 
@@ -49,43 +49,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Function to save a request to localStorage
+    // Function to save a request to Firebase
     function saveRequest(day, name, shift, priority) {
-        const requests = JSON.parse(localStorage.getItem('requests')) || {};
-        if (!requests[day]) {
-            requests[day] = [];
-        }
-        requests[day].push({ name, shift, priority, approved: false });
-        localStorage.setItem('requests', JSON.stringify(requests));
+        const requestRef = firebase.database().ref(`requests/${day}`).push();
+        requestRef.set({
+            name,
+            shift,
+            priority,
+            approved: false
+        });
     }
 
-    // Function to load requests from localStorage
+    // Function to load requests from Firebase
     function loadRequests() {
-        const requests = JSON.parse(localStorage.getItem('requests')) || {};
-        for (const day in requests) {
-            requests[day].forEach(request => {
-                const requestDiv = document.createElement('div');
-                requestDiv.classList.add('request');
-                requestDiv.classList.add(request.priority.toLowerCase());
-                requestDiv.textContent = `${request.name} - ${request.shift}`;
-                if (request.approved) {
-                    requestDiv.style.backgroundColor = 'green';
-                }
-                document.querySelector(`.day[data-day="${day}"] .requests`).appendChild(requestDiv);
-            });
-        }
+        const requestsRef = firebase.database().ref('requests');
+        requestsRef.on('value', (snapshot) => {
+            const requests = snapshot.val();
+            for (const day in requests) {
+                requests[day].forEach(request => {
+                    const requestDiv = document.createElement('div');
+                    requestDiv.classList.add('request');
+                    requestDiv.classList.add(request.priority.toLowerCase());
+                    requestDiv.textContent = `${request.name} - ${request.shift}`;
+                    if (request.approved) {
+                        requestDiv.style.backgroundColor = 'green';
+                    }
+                    document.querySelector(`.day[data-day="${day}"] .requests`).appendChild(requestDiv);
+                });
+            }
+        });
     }
 
-    // Function to update request approval in localStorage
+    // Function to update request approval in Firebase
     function updateRequestApproval(textContent) {
-        const requests = JSON.parse(localStorage.getItem('requests')) || {};
-        for (const day in requests) {
-            requests[day].forEach(request => {
-                if (`${request.name} - ${request.shift}` === textContent) {
-                    request.approved = true;
-                }
-            });
-        }
-        localStorage.setItem('requests', JSON.stringify(requests));
+        const requestsRef = firebase.database().ref('requests');
+        requestsRef.once('value', (snapshot) => {
+            const requests = snapshot.val();
+            for (const day in requests) {
+                requests[day].forEach(request => {
+                    if (`${request.name} - ${request.shift}` === textContent) {
+                        request.approved = true;
+                        firebase.database().ref(`requests/${day}`).set(requests[day]);
+                    }
+                });
+            }
+        });
     }
 });
