@@ -1,91 +1,141 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const dialog = document.getElementById('dialog');
-    const submitRequestButton = document.getElementById('submit-request');
-    const adminButton = document.getElementById('admin-button');
+body {
+    font-family: Arial, sans-serif;
+    direction: rtl; /* Support for right-to-left text */
+    margin: 0;
+    padding: 0;
+}
 
-    // Load saved requests from localStorage
-    loadRequests();
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columns for 7 days */
+    gap: 10px;
+    padding: 20px;
+}
 
-    // Open the dialog
-    document.querySelectorAll('.add-button').forEach(button => {
-        button.addEventListener('click', (e) => {
-            dialog.classList.remove('hidden');
-            // Store the current day
-            dialog.setAttribute('data-day', e.target.closest('.day').dataset.day);
-        });
-    });
+.day {
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: relative;
+}
 
-    // Submit the request
-    submitRequestButton.addEventListener('click', () => {
-        const name = document.getElementById('name').value;
-        const shift = document.getElementById('shift').value;
-        const priority = document.getElementById('priority').value;
-        const day = dialog.getAttribute('data-day');
-        const requestDiv = document.createElement('div');
+.date {
+    font-weight: bold;
+    color: black; /* Black color for the date */
+    margin-bottom: 10px;
+}
 
-        requestDiv.classList.add('request');
-        requestDiv.classList.add(priority.toLowerCase()); // Add the class based on priority
-        requestDiv.textContent = `${name} - ${shift}`;
+.add-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
 
-        document.querySelector(`.day[data-day="${day}"] .requests`).appendChild(requestDiv);
-        dialog.classList.add('hidden');
+.requests {
+    margin-top: 30px;
+}
 
-        // Save the request to localStorage
-        saveRequest(day, name, shift, priority);
-    });
+.request {
+    padding: 5px;
+    margin-bottom: 5px;
+}
 
-    // Admin Mode
-    adminButton.addEventListener('click', () => {
-        const password = prompt('Enter the admin password:');
-        if (password === '3615') {
-            document.querySelectorAll('.request').forEach(request => {
-                request.addEventListener('click', () => {
-                    request.style.backgroundColor = 'green';
-                    updateRequestApproval(request.textContent);
-                });
-            });
-        } else {
-            alert('Incorrect password');
-        }
-    });
+.request.low {
+    color: grey; /* Grey color for low priority */
+    background-color: #f0f0f0; /* Light background for contrast */
+}
 
-    // Function to save a request to localStorage
-    function saveRequest(day, name, shift, priority) {
-        const requests = JSON.parse(localStorage.getItem('requests')) || {};
-        if (!requests[day]) {
-            requests[day] = [];
-        }
-        requests[day].push({ name, shift, priority, approved: false });
-        localStorage.setItem('requests', JSON.stringify(requests));
+.request.medium {
+    color: orange; /* Orange color for medium priority */
+    background-color: #fff5e6; /* Light orange background */
+}
+
+.request.high {
+    color: red; /* Red color for high priority */
+    background-color: #ffe6e6; /* Light red background */
+}
+
+.hidden {
+    display: none;
+}
+
+#dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    width: 80%; /* Adjusted for mobile */
+}
+
+#admin-button {
+    margin-top: 20px;
+}
+
+/* Media Queries for Responsive Design */
+
+/* For screens smaller than 600px (typically mobile devices) */
+@media (max-width: 600px) {
+    #calendar {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 7 */
+        gap: 5px;
+        padding: 10px;
     }
 
-    // Function to load requests from localStorage
-    function loadRequests() {
-        const requests = JSON.parse(localStorage.getItem('requests')) || {};
-        for (const day in requests) {
-            requests[day].forEach(request => {
-                const requestDiv = document.createElement('div');
-                requestDiv.classList.add('request');
-                requestDiv.classList.add(request.priority.toLowerCase());
-                requestDiv.textContent = `${request.name} - ${request.shift}`;
-                if (request.approved) {
-                    requestDiv.style.backgroundColor = 'green';
-                }
-                document.querySelector(`.day[data-day="${day}"] .requests`).appendChild(requestDiv);
-            });
-        }
+    .day {
+        padding: 5px;
     }
 
-    // Function to update request approval in localStorage
-    function updateRequestApproval(textContent) {
-        const requests = JSON.parse(localStorage.getItem('requests')) || {};
-        for (const day in requests) {
-            requests[day].forEach(request => {
-                if (`${request.name} - ${request.shift}` === textContent) {
-                    request.approved = true;
-                }
-            });
-        }
-        localStorage.setItem('requests', JSON.stringify(requests));
+    .date {
+        font-size: 14px; /* Smaller font size for mobile */
     }
-});
+
+    .requests {
+        margin-top: 20px;
+    }
+
+    #dialog {
+        width: 100%; /* Full width on mobile */
+        padding: 15px;
+    }
+
+    #admin-button {
+        width: 100%; /* Full width button on mobile */
+        padding: 10px;
+        font-size: 16px;
+    }
+}
+
+/* For screens between 600px and 900px (typically tablets) */
+@media (min-width: 600px) and (max-width: 900px) {
+    #calendar {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns instead of 7 */
+        gap: 8px;
+        padding: 15px;
+    }
+
+    .day {
+        padding: 8px;
+    }
+
+    .date {
+        font-size: 16px; /* Adjusted font size for tablets */
+    }
+
+    .requests {
+        margin-top: 25px;
+    }
+
+    #dialog {
+        width: 80%; /* Slightly larger dialog for tablets */
+        padding: 18px;
+    }
+
+    #admin-button {
+        width: 80%; /* Adjusted width for tablets */
+        padding: 12px;
+        font-size: 18px;
+    }
+}
